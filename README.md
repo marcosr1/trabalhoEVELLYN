@@ -1,47 +1,26 @@
-# DevBanco 💼
+# TecnoCaixa 📦
 
-Um sistema web para gerenciar colaboradores e departamentos de uma organização, desenvolvido com **Flask** e **SQLAlchemy**.
+Sistema web de **controle de estoque e faturamento** para uma loja de informática, feito com **Flask**, **SQLAlchemy** e banco **PostgreSQL no Neon**.
 
-## 📋 Sobre o Projeto
+## 📋 O que o sistema faz
 
-DevBanco é uma aplicação de recursos humanos (HR) que permite:
-- Cadastrar e gerenciar **departamentos**
-- Cadastrar, editar e excluir **colaboradores**
-- Associar colaboradores a departamentos
-- Visualizar dados de forma organizada
+- **Painel:** produtos cadastrados, unidades em estoque, valor do estoque e produtos que precisam de reposição
+- **Faturamento:** total vendido, número de vendas, ticket médio, lucro estimado e gráfico dos últimos 7 dias
+- **Produtos:** cartões com foto, busca, filtro por categoria, cadastro, edição e exclusão
+- **Movimentações:** registro de entradas, vendas e saídas, com histórico
 
-## 🛠️ Tecnologias Utilizadas
+## 🛠️ Tecnologias
 
-| Tecnologia | Descrição |
-|-----------|-----------|
-| **Flask** | Framework web leve e poderoso para Python |
-| **SQLAlchemy** | ORM para trabalhar com banco de dados |
-| **Flask-Migrate** | Gerenciamento de migrações de banco de dados |
-| **PostgreSQL** | Banco de dados relacional |
-| **HTML/CSS** | Frontend da aplicação |
+| Tecnologia | Uso |
+|-----------|-----|
+| **Flask** | Servidor web e rotas da API |
+| **SQLAlchemy** | Acesso ao banco de dados |
+| **PostgreSQL (Neon)** | Banco de dados na nuvem |
+| **HTML, CSS e JavaScript** | Página do sistema |
 
-## 📊 Composição do Projeto
+## 🚀 Como rodar no computador
 
-- **HTML** - 58.2%
-- **Python** - 37.2%
-- **CSS** - 4.6%
-
-## 🚀 Como Usar
-
-### Pré-requisitos
-
-- Python 3.8+
-- PostgreSQL
-- pip
-
-### 1. Clonar o Repositório
-
-```bash
-git clone https://github.com/evelynkarinne/devbanco.git
-cd devbanco
-```
-
-### 2. Criar um Ambiente Virtual
+### 1. Criar o ambiente virtual
 
 ```bash
 python -m venv venv
@@ -53,23 +32,23 @@ venv\Scripts\activate
 source venv/bin/activate
 ```
 
-### 3. Instalar Dependências
+### 2. Instalar as dependências
 
 ```bash
 pip install -r requirements.txt
 ```
 
-### 4. Configurar Variáveis de Ambiente
+### 3. Configurar o `.env`
 
-Crie um arquivo `.env` na raiz do projeto:
+Copie `.env.example` para `.env` e coloque a sua `DATABASE_URL` do Neon:
 
 ```env
-DATABASE_URL=postgresql://usuario:senha@localhost:5432/devbanco
+DATABASE_URL=postgresql://usuario:senha@host.neon.tech/neondb?sslmode=require&channel_binding=require
 SECRET_KEY=sua_chave_secreta_aqui
 FLASK_DEBUG=True
 ```
 
-### 5. Executar a Aplicação
+### 4. Executar
 
 ```bash
 python app.py
@@ -77,133 +56,49 @@ python app.py
 
 Acesse em: `http://localhost:5000`
 
+Na primeira execução, as tabelas são criadas sozinhas no banco e os produtos da pasta `static/Fotos` são cadastrados (veja `produtos_iniciais.py`).
+
+## ☁️ Deploy no Render
+
+- **Build Command:** `pip install -r requirements.txt`
+- **Start Command:** `gunicorn app:app`
+- **Environment:** `DATABASE_URL` e `SECRET_KEY` (o `.env` não vai para o GitHub)
+
 ## 📁 Estrutura do Projeto
 
 ```
-devbanco/
-├── app.py              # Aplicação principal com rotas
-├── config.py           # Configuração da aplicação
-├── models.py           # Modelos de dados (Departamento, Colaborador)
-├── requirements.txt    # Dependências do projeto
-├── templates/          # Arquivos HTML
-├── static/             # Arquivos CSS, JS e imagens
-└── README.md          # Documentação
+├── app.py                 # Servidor Flask: página e rotas da API
+├── config.py              # Configuração (lê o .env)
+├── models.py              # Tabelas do banco (Produto, Movimento)
+├── produtos_iniciais.py   # Produtos cadastrados na primeira execução
+├── requirements.txt       # Dependências
+├── templates/
+│   └── estoque.html       # Página do sistema
+└── static/
+    ├── style.css          # Visual
+    ├── script.js          # Funcionamento da página
+    └── Fotos/             # Fotos dos produtos
 ```
 
-## 🔧 Principais Funcionalidades
-
-### Rotas Disponíveis
+## 🔧 Rotas
 
 | Rota | Método | Descrição |
 |------|--------|-----------|
-| `/` | GET | Página inicial |
-| `/departamentos` | GET | Listar departamentos |
-| `/colaboradores` | GET | Listar colaboradores |
-| `/novo-colaborador` | GET, POST | Criar novo colaborador |
-| `/editar-colaborador/<id>` | GET, POST | Editar colaborador |
-| `/excluir-colaborador/<id>` | GET | Excluir colaborador |
-
-### Modelos de Dados
-
-#### 📌 Departamento
-```python
-- codigo (int, PK)
-- nome (string)
-- sigla (string)
-```
-
-#### 👤 Colaborador
-```python
-- matricula (int, PK)
-- nome (string)
-- salario (decimal)
-- email (string)
-- endereco (string)
-- codigo_dp (FK → Departamento)
-```
-
-## 📦 Dependências Principais
-
-```
-Flask==3.1.3
-Flask-SQLAlchemy==3.1.1
-Flask-Migrate==4.1.0
-psycopg2-binary==2.9.12
-python-dotenv==1.2.2
-```
-
-Para ver todas as dependências, consulte `requirements.txt`.
-
-## 🔐 Segurança
-
-- Chave secreta configurável via variáveis de ambiente
-- Proteção contra SQL Injection com SQLAlchemy ORM
-- Senhas devem ser implementadas em futuras versões
-
-## 📝 Exemplos de Uso
-
-### Criar um novo colaborador
-
-```python
-colaborador = Colaborador(
-    matricula=1001,
-    nome="João Silva",
-    salario=3500.00,
-    email="joao@example.com",
-    endereco="Rua A, 123",
-    codigo_dp=1
-)
-db.session.add(colaborador)
-db.session.commit()
-```
-
-### Listar todos os colaboradores
-
-```python
-colaboradores = Colaborador.query.all()
-for colab in colaboradores:
-    print(colab.to_dict())
-```
-
-## 🤝 Contribuindo
-
-Contribuições são bem-vindas! Para contribuir:
-
-1. Faça um fork do projeto
-2. Crie uma branch para sua feature (`git checkout -b feature/AmazingFeature`)
-3. Commit suas mudanças (`git commit -m 'Add some AmazingFeature'`)
-4. Push para a branch (`git push origin feature/AmazingFeature`)
-5. Abra um Pull Request
-
-## 📄 Licença
-
-Este projeto está sob licença MIT. Veja o arquivo LICENSE para mais detalhes.
-
-## 👩‍💻 Autor
-
-Desenvolvido por **evelynkarinne**
-
-## 📧 Contato
-
-Para dúvidas ou sugestões, abra uma [issue](https://github.com/evelynkarinne/devbanco/issues) no repositório.
-
----
-
-**Desenvolvido com ❤️ para simplificar o gerenciamento de recursos humanos**
-
-## 📦 TecnoCaixa - Controle de Estoque
-
-Página extra em **`/estoque`** (também no menu da página inicial) para controlar estoque e faturamento da loja.
-
-- Os dados ficam no banco **PostgreSQL do Neon** (tabelas `produto` e `movimento`).
-- Na primeira execução, as tabelas são criadas sozinhas e os produtos da pasta `static/Fotos` são cadastrados (veja `produtos_iniciais.py`).
-- Arquivos: `templates/estoque.html`, `static/style.css`, `static/script.js` e `static/Fotos/`.
-- Copie `.env.example` para `.env` e coloque a sua `DATABASE_URL` do Neon.
-
-| Rota | Método | Descrição |
-|------|--------|-----------|
-| `/estoque` | GET | Página do controle de estoque |
+| `/` ou `/estoque` | GET | Página do controle de estoque |
 | `/api/estoque` | GET | Lista produtos e movimentações |
 | `/api/produtos` | POST | Cadastra produto |
 | `/api/produtos/<id>` | PUT, DELETE | Edita ou exclui produto |
 | `/api/movimentos` | POST | Registra entrada, venda ou saída |
+
+## 🗃️ Tabelas do Banco
+
+#### Produto
+```
+id, sku, nome, categoria, quantidade, minimo, custo, preco, local, foto
+```
+
+#### Movimento
+```
+id, data, produto_id, produto_nome, tipo (entrada | venda | saida),
+quantidade, valor, custo_unitario, observacao
+```
