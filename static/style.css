@@ -313,6 +313,14 @@ label {
   color: #666;
 }
 
+/* Aviso no final da aba Produtos */
+.aviso-ia {
+  margin: 24px 0 0;
+  font-size: 0.85rem;
+  color: #666;
+  text-align: center;
+}
+
 /* Foto no formulário */
 .foto-edicao {
   display: flex;
