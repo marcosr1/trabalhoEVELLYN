@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Departamentos</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='estilo.css') }}">
+</head>
+<body>
+
+<div class="container">
+
+    <h1>Resumo Departamentos</h1>
+    <div class="voltar">
+        <a href="/">← Voltar para a página inicial</a>
+    </div>
+    <br>
+    <table>
+        <tr>
+            <th>Código</th>
+            <th>Nome</th>
+            <th>Sigla</th>
+            <th>Qtd. Colaboradores</th>
+        </tr>
+
+        {% for d in departamentos %}
+            <tr>
+                <td>{{ d.codigo }}</td>
+                <td>{{ d.nome }}</td>
+                <td>{{ d.sigla }}</td>
+                <td>{{ d.colaboradores|length }}</td>
+            </tr>
+        {% endfor %}
+
+    </table>
+
+</div>
+
+</body>
+</html>
